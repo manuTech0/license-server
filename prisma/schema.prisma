@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  userId        String   @id @default(ulid())
+  username      String   @unique
+  role          UserRole @default(USER)
+  email         String   @unique
+  emailVerified Boolean
+  password      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([username, password])
+  @@index([email, password])
+}
+
+model Plans {
+  planId Int @id @default(autoincrement())
+  limit Int
+  name String
+  expires String
+  licenseKey LicenseKey[]
+}
+
+model LicenseKey {
+  licenseId   String   @id @default(cuid())
+  licenseKey  String   @unique
+  fingerprint String[]
+  planId Int @unique
+  limitSetting Plans @relation(fields: [planId], references: [planId], onUpdate: Cascade)
+
+  isExpired Boolean   @default(false)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([licenseKey, isExpired])
+}
