@@ -2,8 +2,8 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import ms from "ms";
 import { Pool } from "pg";
 import { ENV_SERVER } from "@/schema/env.schema";
-import { PrismaClient } from "./generated/prisma/client";
 import { redis } from "./redis.library";
+import { PrismaClient } from "./generated/prisma/client";
 
 const globalForPrisma = globalThis as {
   prisma?: PrismaClient;

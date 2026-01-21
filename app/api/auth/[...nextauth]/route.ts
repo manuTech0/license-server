@@ -9,6 +9,8 @@ import { ENV_SERVER } from "@/schema/env.schema";
 import { AuthSchema } from "@/schemas/auth.schema";
 import { UserRole } from "@/lib/generated/prisma/enums";
 
+export const runtime = "nodejs";
+
 const handler = await NextAuth({
   adapter: PrismaAdapter(prismaWithExtends),
   providers: [
