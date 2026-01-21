@@ -23,6 +23,8 @@ export type FindLicenseResult = {
   valid: boolean;
   isExpired: boolean;
   licId: string;
+  limit: boolean;
+  raw: unknown;
 };
 
 const prismaWithExtends = prisma.$extends({
@@ -45,17 +47,20 @@ const prismaWithExtends = prisma.$extends({
             },
             licenseId: true,
             licenseKey: true,
+
             fingerprint: true,
             isExpired: true,
           },
         });
         if (!license) return null;
+        if (!license.limitSetting) return null;
+        console.error(licenseKey, license.licenseKey);
         const transformedData: FindLicenseResult = {
           isExpired: license.isExpired,
-          valid:
-            licenseKey === license.licenseKey &&
-            license.fingerprint.length >= license.limitSetting.limit,
           licId: license.licenseId,
+          valid: license.licenseKey === licenseKey,
+          limit: license.fingerprint.length >= license.limitSetting.limit,
+          raw: license,
         };
         await redis.set(
           cacheKey,
