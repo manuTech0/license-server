@@ -3,7 +3,7 @@ import ms from "ms";
 import { Pool } from "pg";
 import { ENV_SERVER } from "@/schema/env.schema";
 import { redis } from "./redis.library";
-import { PrismaClient } from "./generated/prisma/client";
+import { PrismaClient } from "./generated/prisma";
 
 const globalForPrisma = globalThis as {
   prisma?: PrismaClient;
